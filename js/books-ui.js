@@ -38,6 +38,10 @@ export class BooksUI {
       const id = targetDiv.id;
       const selectedBook = this.currentPage.find(item => item.id === id);
 
+      if (!selectedBook) {
+        return;
+      }
+
       if (this.isBookSelected) {
         const bookToUnselect = this.searchResultHolder.querySelector(
           ".selected-book"
@@ -49,9 +53,11 @@ export class BooksUI {
       this.isBookSelected = true;
 
       this.bookInfoHolder.innerHTML = `
-        <div>
-          <h2>${selectedBook.title}</h2>
-          <h3>${selectedBook.subtitle}</h3>
+          <div class="center-block__title">
+            <p>${selectedBook.title}</p>
+            <p>${selectedBook.subtitle}</p>
+          </div>
+          <div class="center-block__book-info">
           <p>Languages available: ${
             selectedBook.language ? selectedBook.language.join(", ") : ""
           }</p>
@@ -64,15 +70,20 @@ export class BooksUI {
               ? selectedBook.publish_year.join(", ")
               : ""
           }</p>
-          <a href="#" id="refAddToList">Add book to Read List</a>
-        </div>
+          </div>
+          <div class="center-block__add-to-list">
+            <a href="#" id="refAddToList">Add book to Read List</a>
+          </div>
+        
       `;
     });
 
     this.bookInfoHolder.addEventListener("click", event => {
       const targetDiv = event.target;
       if (targetDiv.id === "refAddToList") {
-        const bookToAdd = this.searchResultHolder.querySelector(".select-book");
+        const bookToAdd = this.searchResultHolder.querySelector(
+          ".selected-book"
+        );
         const selectedBook = this.currentPage.find(
           item => item.id === bookToAdd.id
         );
