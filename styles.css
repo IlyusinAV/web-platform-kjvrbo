@@ -75,8 +75,15 @@
 }
 
 .center-block {
+  display: flex;
   flex: 1 1 100%;
   min-width: 300px;
+  padding: 2rem;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
 }
 
 .right-block {

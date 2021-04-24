@@ -58,6 +58,12 @@ export class BooksUI {
           <p>Full text available: ${
             selectedBook.has_fulltext ? "yes" : "no"
           }</p>
+          <p>First publish year: ${selectedBook.first_publish_year}</p>
+          <p>Years published: ${
+            selectedBook.publish_year
+              ? selectedBook.publish_year.join(", ")
+              : ""
+          }</p>
           <a href="#" id="refAddToList">Add book to Read List</a>
         </div>
       `;
