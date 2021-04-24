@@ -1,0 +1,89 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400, 900);
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.app-holder {
+  display: flex;
+}
+
+.left-block {
+  flex: 0 0 400px;
+}
+
+.left-block__search {
+  display: flex;
+  height: 100px;
+  background-color: #cbcbcb;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000000;
+}
+
+.left-block__search-input {
+  width: 220px;
+  height: 40px;
+  background-color: #ffffff;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.left-block__search-button {
+  width: 95px;
+  height: 40px;
+  margin-left: 20px;
+  background-color: #3f50b5;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+  color: #ffffff;
+}
+
+.left-block__search-result {
+  height: calc(100vh - 157px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.left-block__search-result-item {
+  display: flex;
+  height: 125px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  padding: 25px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+  color: #000000;
+}
+
+.left-block__footer {
+  display: flex;
+  height: 57px;
+  background-color: #cbcbcb;
+}
+
+.center-block {
+  flex: 1 1 100%;
+  min-width: 300px;
+}
+
+.right-block {
+  flex: 0 0 400px;
+}
+
+.selected-book {
+  font-weight: 900;
+  background-color: #eeeeee;
+}
