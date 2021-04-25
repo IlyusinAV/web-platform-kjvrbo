@@ -1,19 +1,22 @@
 export class BooksUI {
   searchResultHolder;
   bookInfoHolder;
-  toReadList;
+  toReadListHolder;
 
   currentPage = [];
   arrayReadBooks = [];
 
   api;
+  toReadList;
 
   isBookSelected;
 
-  constructor(api) {
+  constructor(api, toReadList) {
+    this.toReadList = toReadList;
+
     this.searchResultHolder = document.getElementById("searchResultHolder");
     this.bookInfoHolder = document.getElementById("bookInfoHolder");
-    this.toReadList = document.getElementById("toReadList");
+    this.toReadListHolder = document.getElementById("toReadListHolder");
 
     const searchInput = document.getElementById("searchInput");
     const goButton = document.getElementById("goButton");
@@ -87,13 +90,21 @@ export class BooksUI {
         const selectedBook = this.currentPage.find(
           item => item.id === bookToAdd.id
         );
-        this.arrayReadBooks.push(selectedBook);
-        localStorage.setItem(
-          "listReadBooks",
-          JSON.stringify(this.arrayReadBooks)
-        );
+        toReadList.addBook(selectedBook);
         this.processToReadList();
       }
+    });
+
+    this.toReadListHolder.addEventListener("click", event => {
+      const targetDiv = event.target;
+      const id = targetDiv.id;
+      if (targetDiv.classList.contains("refRemoveFromList")) {
+        toReadList.removeBook(id);
+      }
+      if (targetDiv.classList.contains("refMarkAsRead")) {
+        toReadList.markBookAsRead(id);
+      }
+      this.processToReadList();
     });
   }
 
@@ -122,21 +133,30 @@ export class BooksUI {
   }
 
   processToReadList() {
-    let lsReadBooks = JSON.parse(localStorage.getItem("listReadBooks"));
-    if (lsReadBooks === null) {
-      localStorage.setItem("listReadBooks", "[]");
-      lsReadBooks = [];
-    }
-    this.arrayReadBooks = lsReadBooks;
-    const innerHTML = this.arrayReadBooks.reduce((acc, item) => {
-      return (
-        acc +
+    this.arrayReadBooks = this.toReadList.getList();
+    this.toReadListHolder.innerHTML = this.arrayReadBooks.reduce(
+      (acc, item) => {
+        return (
+          acc +
+          `
+          <div id="${item.id}" class=${
+            item.mark_as_read
+              ? "right-block__mark-as-read"
+              : "right-block__book-to-read"
+          }>
+          <p>${item.title} (${item.language ? item.language.join(", ") : ""}) ${
+            item.subtitle
+          }</p>
+          <p>${item.author_name}</p>
+          <a href="#" id="${item.id}" class="refMarkAsRead">Mark as read</a>
+          <a href="#" id="${
+            item.id
+          }" class="refRemoveFromList">Remove from list</a>
+          </div>
         `
-          <div id="${item.id}" class="book-to-read">${item.title}</div>
-        `
-      );
-    }, "");
-
-    this.toReadList.innerHTML = innerHTML;
+        );
+      },
+      ""
+    );
   }
 }
