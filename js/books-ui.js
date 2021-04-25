@@ -2,6 +2,7 @@ export class BooksUI {
   searchResultHolder;
   bookInfoHolder;
   toReadListHolder;
+  toReadListStat;
 
   currentPage = [];
   arrayReadBooks = [];
@@ -20,6 +21,8 @@ export class BooksUI {
 
     const searchInput = document.getElementById("searchInput");
     const goButton = document.getElementById("goButton");
+
+    this.toReadListStat = document.querySelector(".right-block__header-stat");
 
     this.processToReadList();
 
@@ -134,6 +137,7 @@ export class BooksUI {
 
   processToReadList() {
     this.arrayReadBooks = this.toReadList.getList();
+    this.toReadListStat.innerHTML = `${this.arrayReadBooks.length} books, `;
     this.toReadListHolder.innerHTML = this.arrayReadBooks.reduce(
       (acc, item) => {
         return (
