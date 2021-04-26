@@ -72,8 +72,32 @@
 
 .left-block__footer {
   display: flex;
+  flex-direction: column;
   height: 57px;
   background-color: #cbcbcb;
+  padding-top: 10px;
+  padding-left: 25px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #000000;
+}
+
+.left-block__footer-nav {
+  margin-top: 10px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #0000ff;
+}
+
+.left-block__footer-nav > a {
+  margin-right: 20px;
+  text-decoration: none;
 }
 
 .center-block {

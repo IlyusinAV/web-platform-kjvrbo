@@ -14,6 +14,14 @@ export class ToReadList {
     return JSON.parse(localStorage.getItem("listReadBooks"));
   };
 
+  calcRead = () => {
+    return this._arrayToReadList.reduce((cnt, item) => {
+      let readBook = 0;
+      if (item.mark_as_read) readBook = 1;
+      return cnt + readBook;
+    }, 0);
+  };
+
   saveList = () => {
     localStorage.setItem(
       "listReadBooks",

@@ -1,5 +1,6 @@
 export class BooksUI {
   searchResultHolder;
+  searchStatHolder;
   bookInfoHolder;
   toReadListHolder;
   toReadListStat;
@@ -9,6 +10,10 @@ export class BooksUI {
 
   api;
   toReadList;
+
+  lastQuery;
+  currentPageNum;
+  lastPage;
 
   isBookSelected;
 
@@ -21,22 +26,53 @@ export class BooksUI {
 
     const searchInput = document.getElementById("searchInput");
     const goButton = document.getElementById("goButton");
+    this.searchStatHolder = document.getElementById("searchStatHolder");
 
-    this.toReadListStat = document.querySelector(".right-block__header-stat");
+    this.toReadListStat = document.getElementById("toReadListStat");
 
     this.processToReadList();
 
     goButton.addEventListener("click", () => {
-      const querry = searchInput.value;
-      if (!querry) {
+      const query = searchInput.value;
+      if (!query) {
         return;
       }
 
-      api.search(querry).then(page => {
+      searchStatHolder.innerHTML = `<strong>Loading...</strong>`;
+      this.currentPageNum = 1;
+
+      api.search(query, this.currentPage).then(page => {
         this.processSearchResult(page);
       });
 
+      this.lastQuery = query;
       this.isBookSelected = false;
+    });
+
+    searchStatHolder.addEventListener("click", event => {
+      const targetDiv = event.target;
+      if (targetDiv.id === "refPrevPage" && this.currentPageNum > 1) {
+        searchInput.value = this.lastQuery;
+        searchStatHolder.innerHTML = `<strong>Loading...</strong>`;
+        this.currentPageNum--;
+        api.search(this.lastQuery, this.currentPageNum).then(page => {
+          this.processSearchResult(page);
+        });
+        this.isBookSelected = false;
+      }
+
+      if (
+        targetDiv.id === "refNextPage" &&
+        this.currentPageNum < this.lastPage
+      ) {
+        searchInput.value = this.lastQuery;
+        searchStatHolder.innerHTML = `<strong>Loading...</strong>`;
+        this.currentPageNum++;
+        api.search(this.lastQuery, this.currentPageNum).then(page => {
+          this.processSearchResult(page);
+        });
+        this.isBookSelected = false;
+      }
     });
 
     this.searchResultHolder.addEventListener("click", event => {
@@ -133,11 +169,25 @@ export class BooksUI {
     }, "");
 
     this.searchResultHolder.innerHTML = booksHTML;
+
+    this.lastPage = Math.floor(page.num_found / 100) + 1;
+
+    this.searchStatHolder.innerHTML = `
+      <div>Found ${page.num_found}     Start ${
+      page.start
+    }     Page size 100</div>
+      <div class="left-block__footer-nav">
+      <a href="#" id="refPrevPage">Prev results</a>
+      <a href="#" id="refNextPage">Next results</a>
+      </div>
+    `;
   }
 
   processToReadList() {
     this.arrayReadBooks = this.toReadList.getList();
-    this.toReadListStat.innerHTML = `${this.arrayReadBooks.length} books, `;
+    this.toReadListStat.innerHTML = `${
+      this.arrayReadBooks.length
+    } books, ${this.toReadList.calcRead()} read`;
     this.toReadListHolder.innerHTML = this.arrayReadBooks.reduce(
       (acc, item) => {
         return (
@@ -151,7 +201,7 @@ export class BooksUI {
           <p>${item.title} (${item.language ? item.language.join(", ") : ""}) ${
             item.subtitle
           }</p>
-          <p>${item.author_name}</p>
+          <p>${item.author_name[0] ? item.author_name[0] : ""}</p>
           <a href="#" id="${item.id}" class="refMarkAsRead">Mark as read</a>
           <a href="#" id="${
             item.id
